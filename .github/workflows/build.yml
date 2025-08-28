@@ -35,7 +35,8 @@ jobs:
     - name: Build and push staging docker image
       uses: docker/build-push-action@v5
       with:
-        context: .
+        context: ./app
+        dockerfile: ./app/Dockerfile.dev
         platforms: linux/amd64
         push: true
         tags: ghcr.io/miroslavzaprazny/coach-app-be:staging
