@@ -38,7 +38,7 @@ jobs:
         context: .
         platforms: linux/amd64
         push: true
-        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:staging
+        tags: ghcr.io/miroslavzaprazny/coach-app-be:staging
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
