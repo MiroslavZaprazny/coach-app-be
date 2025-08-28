@@ -36,7 +36,7 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: ./app
-        dockerfile: ./app/Dockerfile.dev
+        file: ./app/Dockerfile.dev
         platforms: linux/amd64
         push: true
         tags: ghcr.io/miroslavzaprazny/coach-app-be:staging
