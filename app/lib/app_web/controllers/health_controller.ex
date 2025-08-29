@@ -2,6 +2,8 @@ defmodule AppWeb.HealthController do
   use AppWeb, :controller
   use OpenApiSpex.ControllerSpecs
 
+  alias OpenApiSpex.Schema
+
   tags ["health"]
   operation :check,
     summary: "Health check",
