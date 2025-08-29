@@ -54,6 +54,7 @@ defmodule App.MixProject do
       {:bandit, "~> 1.5"},
       {:open_api_spex, "~> 3.21"},
       {:guardian, "~> 2.3"},
+      {:oauth2, "~> 2.0"},
     ]
   end
 

@@ -13,6 +13,10 @@ defmodule AppWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_session
+  end
+
+  pipeline :openapi do
     plug OpenApiSpex.Plug.PutApiSpec, module: AppWeb.ApiSpec
   end
 
@@ -22,8 +26,16 @@ defmodule AppWeb.Router do
     get "/health", HealthController, :check
   end
 
-  scope "/api" do
+  scope "/api/oauth/providers", AppWeb do
     pipe_through :api
+
+    get "/", OAuthController, :providers
+    get "/:provider/auth_url", OAuthController, :auth_url
+    # get "/:provider/callback", OAuthController, :callback
+  end
+
+  scope "/api" do
+    pipe_through [:api, :openapi]
 
     get "/openapi", OpenApiSpex.Plug.RenderSpec, []
   end

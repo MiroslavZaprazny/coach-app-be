@@ -1,5 +1,5 @@
 defmodule App.Accounts.Guardian do
-  use Guardian, otp_app: :auth_me
+  use Guardian, otp_app:
   alias App.Accounts
   alias Ecto.NoResultsError
 
