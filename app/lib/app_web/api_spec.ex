@@ -8,10 +8,7 @@ defmodule AppWeb.ApiSpec do
   def spec do
       %OpenApi{
         servers: [
-          %Server{
-            url: "https://staging.coach-api.miroslavzaprazny.sk/api/",
-            description: "Staging server"
-          },
+          servers: [Server.from_endpoint(Endpoint)],
         ],
         info: %Info {
           title: "Coach app API",
