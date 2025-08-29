@@ -1,14 +1,22 @@
 defmodule AppWeb.Router do
   use AppWeb, :router
 
+  scope "/" do
+    pipe_through :browser
+
+    get "/docs", OpenApiSpex.Plug.SwaggerUI, path: "/api/openapi"
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
+    plug OpenApiSpex.Plug.PutApiSpec, module: AppWeb.ApiSpec
   end
 
   scope "/api", AppWeb do
     pipe_through :api
 
     get "/health", HealthController, :check
+    get "/openapi", OpenApiSpex.Plug.RenderSpec, []
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
