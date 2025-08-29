@@ -2,8 +2,6 @@ defmodule AppWeb.HealthController do
   use AppWeb, :controller
   use OpenApiSpex.ControllerSpecs
 
-  alias OpenApiSpex.Schema
-
   operation :check,
     summary: "Health check",
     description: "Returns health status of the api",
@@ -11,10 +9,10 @@ defmodule AppWeb.HealthController do
       200 => {
         "Health check successful",
         "application/json",
-        %Schema{
+        %{
           type: :object,
           properties: %{
-            status: %Schema{type: :string, example: "ok"}
+            status: %{type: :string, example: "ok"}
           },
           example: %{status: "ok"}
         }
