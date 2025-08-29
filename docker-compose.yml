@@ -7,6 +7,10 @@ services:
       - "4000:4000"
     volumes:
       - ./app:/app
+    environment:
+      - DB_NAME=app
+      - DB_USER=dev
+      - DB_PASSWORD=supersecret
     depends_on:
       - db
 
