@@ -7,9 +7,7 @@ defmodule AppWeb.ApiSpec do
   @impl OpenApi
   def spec do
       %OpenApi{
-        servers: [
-          servers: [Server.from_endpoint(Endpoint)],
-        ],
+        servers: [Server.from_endpoint(Endpoint)],
         info: %Info {
           title: "Coach app API",
           version: "1.0",
