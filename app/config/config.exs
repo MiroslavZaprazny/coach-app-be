@@ -13,7 +13,7 @@ config :app,
 
 # Configures the endpoint
 config :app, AppWeb.Endpoint,
-  url: [host: System.get_env("HOST") || "localhost", scheme: "https"],
+  url: [host: System.get_env("HOST", "localhost"), scheme: "https"],
   adapter: Bandit.PhoenixAdapter,
   render_errors: [
     formats: [json: AppWeb.ErrorJSON],
