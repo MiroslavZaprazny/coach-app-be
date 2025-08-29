@@ -1,6 +1,10 @@
 defmodule AppWeb.Router do
   use AppWeb, :router
 
+  pipeline :browser do
+    plug :accepts, ["html"]
+  end
+
   scope "/" do
     pipe_through :browser
 
