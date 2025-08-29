@@ -5,9 +5,20 @@ defmodule AppWeb.HealthController do
   tags ["health"]
   operation :check,
     summary: "Health check",
-    responses: [
-      ok: {"Response", "application/json", %{status: "ok"}}
-    ]
+    description: "Returns health status of the api",
+    responses: %{
+      200 => {
+        "Health check successful",
+        "application/json",
+        %Schema{
+          type: :object,
+          properties: %{
+            status: %Schema{type: :string, example: "ok"}
+          },
+          example: %{status: "ok"}
+        }
+      }
+    }
   def check(conn, _params) do
     conn
     |> put_status(:ok)
