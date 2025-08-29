@@ -20,7 +20,7 @@ defmodule AppWeb.Router do
     pipe_through :api
 
     get "/health", HealthController, :check
-    get "/openapi", OpenApiSpex.Plug.RenderSpec, []
+    get "/openapi", OpenApiSpex.Plug.RenderSpec, :show
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
