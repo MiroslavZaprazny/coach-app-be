@@ -20,6 +20,11 @@ defmodule AppWeb.Router do
     pipe_through :api
 
     get "/health", HealthController, :check
+  end
+
+  scope "/api" do
+    pipe_through :api
+
     get "/openapi", OpenApiSpex.Plug.RenderSpec, []
   end
 
