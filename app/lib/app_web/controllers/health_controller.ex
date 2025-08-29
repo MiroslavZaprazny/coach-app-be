@@ -1,23 +1,15 @@
 defmodule AppWeb.HealthController do
   use AppWeb, :controller
   use OpenApiSpex.ControllerSpecs
+  alias AppWeb.Schemas.HealthResponse
 
   operation :check,
     summary: "Health check",
     description: "Returns health status of the api",
-    responses: %{
-      200 => {
-        "Health check successful",
-        "application/json",
-        %{
-          type: :object,
-          properties: %{
-            status: %{type: :string, example: "ok"}
-          },
-          example: %{status: "ok"}
-        }
-      }
-    }
+    responses: [
+      ok: {"Response", "application/json", HealthResponse}
+    ]
+
   def check(conn, _params) do
     conn
     |> put_status(:ok)
