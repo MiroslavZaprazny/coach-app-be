@@ -39,6 +39,10 @@ config :logger, :default_formatter,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+config :auth_me, AuthMe.UserManager.Guardian,
+  issuer: "app",
+  secret_key: System.get_env("GUARDIAN_SECRET")
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

@@ -12,6 +12,7 @@ services:
       - DB_NAME=app
       - DB_USER=dev
       - DB_PASSWORD=supersecret
+      - GUARDIAN_SECRET=supersecret
     depends_on:
       - db
 
