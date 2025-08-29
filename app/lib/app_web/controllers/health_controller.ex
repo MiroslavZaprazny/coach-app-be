@@ -4,7 +4,6 @@ defmodule AppWeb.HealthController do
 
   alias OpenApiSpex.Schema
 
-  tags ["health"]
   operation :check,
     summary: "Health check",
     description: "Returns health status of the api",
