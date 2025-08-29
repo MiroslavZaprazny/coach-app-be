@@ -1,4 +1,4 @@
-defmodule App.ApiSpec do
+defmodule AppWeb.ApiSpec do
   alias OpenApiSpex.{Info, OpenApi, Paths, Server}
   alias AppWeb.{Endpoint, Router}
 
