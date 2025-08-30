@@ -1,4 +1,4 @@
-defmodule AppWeb.Schemas.Providers.SupportedProvidersList do
+defmodule AppWeb.Schemas.OAuth.SupportedProvidersList do
     alias OpenApiSpex.Schema
     require OpenApiSpex
 

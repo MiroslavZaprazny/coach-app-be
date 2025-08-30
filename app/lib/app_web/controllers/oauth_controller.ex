@@ -3,7 +3,7 @@ defmodule AppWeb.OAuthController do
   use OpenApiSpex.ControllerSpecs
 
   alias App.OAuth.Manager
-  alias AppWeb.Schemas.Providers.SupportedProvidersList
+  alias AppWeb.Schemas.OAuth.{SupportedProvidersList, AuthUrl}
   alias App.{Accounts, Session}
 
   tags ["OAuth"]
@@ -62,7 +62,13 @@ defmodule AppWeb.OAuthController do
     end
   end
 
-  #Testing endpoint for generating the auth url
+  tags ["OAuth"]
+  operation :auth_url,
+    summary: "Generates auth url",
+    description: "Generates an auth url for a given provider",
+    responses: [
+      ok: {"Response", "application/json", AuthUrl}
+    ]
   def auth_url(conn, %{"provider" => provider_name}) do
     with {:ok, provider} <- Manager.get_provider(provider_name),
          {:ok, token} <- Manager.generate_state_token(),
@@ -81,6 +87,7 @@ defmodule AppWeb.OAuthController do
     end
   end
 
+  #Development endpoint for retrieving the code
   def callback(conn, %{"code" => code}) do
     conn
       |> json(%{code: code})
