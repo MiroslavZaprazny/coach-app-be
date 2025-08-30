@@ -6,9 +6,11 @@ defmodule AppWeb.Endpoint do
   # Set :encryption_salt if you would also like to encrypt it.
   @session_options [
     store: :cookie,
-    key: "_app_key",
-    signing_salt: "J5DbjNx/",
-    same_site: "Lax"
+    key: "app",
+    signing_salt: System.get_env("COOKIE_SIGN_SALT"),
+    same_site: "Lax",
+    http_only: true,
+    secure: true
   ]
 
   socket "/live", Phoenix.LiveView.Socket,
