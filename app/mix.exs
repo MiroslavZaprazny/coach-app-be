@@ -53,7 +53,6 @@ defmodule App.MixProject do
       {:dns_cluster, "~> 0.2.0"},
       {:bandit, "~> 1.5"},
       {:open_api_spex, "~> 3.21"},
-      {:guardian, "~> 2.3"},
       {:oauth2, "~> 2.0"},
     ]
   end

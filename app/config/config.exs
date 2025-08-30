@@ -39,10 +39,6 @@ config :logger, :default_formatter,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-config :app, AuthMe.UserManager.Guardian,
-  issuer: "app",
-  secret_key: System.get_env("GUARDIAN_SECRET")
-
 config :app, :google,
   client_id: System.get_env("GOOGLE_CLIENT_ID"),
   client_secret: System.get_env("GOOGLE_CLIENT_SECRET"),

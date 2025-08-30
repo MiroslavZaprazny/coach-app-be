@@ -51,8 +51,19 @@ defmodule App.Accounts do
   """
   def create_user(attrs) do
     %User{}
-    |> User.changeset(attrs)
+    |> User.changeset(Map.put(attrs, :registration_status, :incomplete))
     |> Repo.insert()
+  end
+
+  def find_or_create_user(attrs) do
+      case Repo.get_by(User, email: Map.get(attrs, :email)) do
+        nil -> 
+          %User{}
+            |> User.changeset(Map.put(attrs, :registration_status, :incomplete))
+            |> Repo.insert()
+        user -> 
+          {:ok, user} 
+      end
   end
 
   @doc """

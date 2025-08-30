@@ -30,8 +30,7 @@ defmodule AppWeb.Router do
     pipe_through :api
 
     get "/", OAuthController, :providers
-    get "/:provider/auth_url", OAuthController, :auth_url
-    # get "/:provider/callback", OAuthController, :callback
+    post "/:provider", OAuthController, :auth
   end
 
   scope "/api" do
@@ -54,6 +53,12 @@ defmodule AppWeb.Router do
 
       live_dashboard "/dashboard", metrics: AppWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
+    end
+
+    scope "/api/oauth/providers", AppWeb do
+      pipe_through :api
+
+      get "/:provider/auth_url", OAuthController, :auth_url
     end
   end
 end

@@ -4,6 +4,7 @@ defmodule AppWeb.OAuthController do
 
   alias App.OAuth.Manager
   alias AppWeb.Schemas.Providers.SupportedProvidersList
+  alias App.Accounts
 
   tags ["OAuth"]
   operation :providers,
@@ -18,27 +19,65 @@ defmodule AppWeb.OAuthController do
     |> json(%{providers: Manager.supported_providers()})
   end
 
-  def auth_url(conn, %{"provider" => provider}) do
-    case Manager.get_provider(provider) do
-      {:ok, _provider_module} ->
-        token = Manager.generate_state_token()
-
-        #todo instead of putting it in a session we should just put the token in redis
-        case Manager.get_auth_url(provider, token) do
-          {:ok, url} ->
+  tags ["OAuth"]
+  operation :auth,
+    summary: "Authenticate a user based on a OAuth auth code",
+    description: "Tries to authenticate a user based on a OAuth auth code. If the user is already registered we log him in, otherwise he has to finish registration",
+    responses: [
+      ok: {"Response", "application/json", SupportedProvidersList}
+    ]
+  def auth(
+      conn, 
+      %{
+        "provider" => provider_name,
+        "auth_code" => auth_code
+      }
+  )  do
+    with {:ok, provider} <- Manager.get_provider(provider_name),
+         {:ok, token} <- Manager.exchange_code_for_access_token(provider, auth_code),
+         {:ok, info} <- provider.get_user_info(provider, token),
+         {:ok, user} <- Accounts.find_or_create_user(info) do
+          case user.registration_status do
+           :complete ->
+            #TODO: generate session id, save session somewhere
+            :ok
+          end
             conn
-            |> put_session(:oauth_state_token, token)
-            |> json(%{auth_url: url})
-          {:error, reason} ->
-            conn
-            |> put_status(:internal_server_error)
-            |> json(%{error: "Failed to generate auth URL", reason: inspect(reason)})
-        end
-
+              |> json(%{user: %{
+                    registration_status: user.registration_status,
+                    email: user.email,
+                    name: user.name,
+                    avatar_url: user.avatar_url,
+                 }})
+    else
       {:error, :unsupported_provider} ->
         conn 
         |> put_status(:bad_request)
         |> json(%{error: "Unsupported provider", supported: Manager.supported_providers()})
+
+      {:error, reason} ->
+        conn 
+        |> put_status(:bad_request)
+        |> json(%{error: "Auth failed", reason: inspect(reason)})
+    end
+  end
+
+  #Testing endpoint for generating the auth url
+  def auth_url(conn, %{"provider" => provider_name}) do
+    with {:ok, provider} <- Manager.get_provider(provider_name),
+         {:ok, token} <- Manager.generate_state_token(),
+         {:ok, auth_url} <- Manager.get_auth_url(provider, token) do
+            conn
+            |> json(%{auth_url: auth_url})
+    else
+      {:error, :unsupported_provider} ->
+        conn 
+        |> put_status(:bad_request)
+        |> json(%{error: "Unsupported provider", supported: Manager.supported_providers()})
+      {:error, reason} ->
+        conn
+        |> put_status(:internal_server_error)
+        |> json(%{error: "Failed to generate auth URL", reason: inspect(reason)})
     end
   end
 end

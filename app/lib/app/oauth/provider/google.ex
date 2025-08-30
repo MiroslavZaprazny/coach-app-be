@@ -30,7 +30,8 @@ defmodule App.OAuth.Providers.Google do
         {:ok, %{
           email: user_data["email"],
           name: user_data["name"],
-          provider_id: user_data["id"],
+          oauth_id: user_data["sub"],
+          oauth_provider: :google,
           avatar_url: user_data["picture"]
         }}
       
