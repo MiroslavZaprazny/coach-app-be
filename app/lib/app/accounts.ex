@@ -1,25 +1,8 @@
 defmodule App.Accounts do
-  @moduledoc """
-  The Accounts context.
-  """
-
   import Ecto.Query, warn: false
   alias App.Repo
 
   alias App.Accounts.User
-
-  @doc """
-  Returns the list of users.
-
-  ## Examples
-
-      iex> list_users()
-      [%User{}, ...]
-
-  """
-  def list_users do
-    Repo.all(User)
-  end
 
   @doc """
   Gets a single user.
@@ -58,9 +41,7 @@ defmodule App.Accounts do
   def find_or_create_user(attrs) do
       case Repo.get_by(User, email: Map.get(attrs, :email)) do
         nil -> 
-          %User{}
-            |> User.changeset(Map.put(attrs, :registration_status, :incomplete))
-            |> Repo.insert()
+          create_user(attrs)
         user -> 
           {:ok, user} 
       end
@@ -98,18 +79,5 @@ defmodule App.Accounts do
   """
   def delete_user(%User{} = user) do
     Repo.delete(user)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking user changes.
-
-  ## Examples
-
-      iex> change_user(user)
-      %Ecto.Changeset{data: %User{}}
-
-  """
-  def change_user(%User{} = user, attrs \\ %{}) do
-    User.changeset(user, attrs)
   end
 end

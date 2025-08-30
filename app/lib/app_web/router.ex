@@ -59,6 +59,7 @@ defmodule AppWeb.Router do
       pipe_through :api
 
       get "/:provider/auth_url", OAuthController, :auth_url
+      get "/:provider/callback", OAuthController, :callback
     end
   end
 end

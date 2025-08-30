@@ -4,7 +4,7 @@ defmodule AppWeb.OAuthController do
 
   alias App.OAuth.Manager
   alias AppWeb.Schemas.Providers.SupportedProvidersList
-  alias App.Accounts
+  alias App.{Accounts, Session}
 
   tags ["OAuth"]
   operation :providers,
@@ -24,7 +24,7 @@ defmodule AppWeb.OAuthController do
     summary: "Authenticate a user based on a OAuth auth code",
     description: "Tries to authenticate a user based on a OAuth auth code. If the user is already registered we log him in, otherwise he has to finish registration",
     responses: [
-      ok: {"Response", "application/json", SupportedProvidersList}
+      #TODO: ok: {"Response", "application/json", SupportedProvidersList}
     ]
   def auth(
       conn, 
@@ -39,8 +39,8 @@ defmodule AppWeb.OAuthController do
          {:ok, user} <- Accounts.find_or_create_user(info) do
           case user.registration_status do
            :complete ->
-            #TODO: generate session id, save session somewhere
-            :ok
+              Session.create(user)
+              |> Session.add_to_cookie(conn)
           end
             conn
               |> json(%{user: %{
@@ -79,5 +79,10 @@ defmodule AppWeb.OAuthController do
         |> put_status(:internal_server_error)
         |> json(%{error: "Failed to generate auth URL", reason: inspect(reason)})
     end
+  end
+
+  def callback(conn, %{"code" => code}) do
+    conn
+      |> json(%{code: code})
   end
 end

@@ -44,6 +44,10 @@ config :app, :google,
   client_secret: System.get_env("GOOGLE_CLIENT_SECRET"),
   redirect_uri: System.get_env("GOOGLE_OAUTH_REDIRECT_URI", "http://localhost:4000/api/auth/google/callback")
 
+config :app, :redis,
+  host: System.get_env("REDIS_HOST"),
+  port: System.get_env("REDIS_PORT")
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
