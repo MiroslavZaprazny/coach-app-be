@@ -6,9 +6,9 @@ defmodule App.Repo.Migrations.CreateUsers do
       add :email, :string
       add :name, :string
       add :avatar_url, :string
-      add :oauth_provider, :oauth_provider_enum
+      add :oauth_provider, :string
       add :oauth_id, :string
-      add :registration_status, :registration_status_enum
+      add :registration_status, :string
 
       timestamps(type: :utc_datetime)
     end
