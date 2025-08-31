@@ -7,8 +7,6 @@ defmodule AppWeb.Schemas.OAuth.AuthUrl do
       type: :object,
       properties: %{
         auth_url: %Schema{type: :string, example: "google_auth_url"}
-      },
-      required: [:auth_url],
-      example: %{auth_url: "google_auth_url"}
+      }
     })
 end

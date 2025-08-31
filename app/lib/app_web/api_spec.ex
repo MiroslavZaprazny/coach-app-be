@@ -9,8 +9,7 @@ defmodule AppWeb.ApiSpec do
       %OpenApi{
         servers: [
           %Server{
-            url: "https://#{System.get_env("HOST", "localhost")}",
-            description: "Staging server"
+            url: "https://#{System.get_env("HOST", "localhost")}"
           },
         ],
         info: %Info {

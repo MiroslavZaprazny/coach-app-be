@@ -7,8 +7,6 @@ defmodule AppWeb.Schemas.HealthResponse do
       type: :object,
       properties: %{
         status: %Schema{type: :string, example: "ok"}
-      },
-      required: [:status],
-      example: %{status: "ok"}
+      }
     })
 end

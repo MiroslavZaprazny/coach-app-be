@@ -7,8 +7,6 @@ defmodule AppWeb.Schemas.OAuth.SupportedProvidersList do
       type: :object,
       properties: %{
         providers: %Schema{type: :array, example: ["google"]}
-      },
-      required: [:providers],
-      example: %{providers: ["google"]}
+      }
     })
 end

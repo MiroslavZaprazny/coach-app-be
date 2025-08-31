@@ -3,7 +3,7 @@ defmodule AppWeb.OAuthController do
   use OpenApiSpex.ControllerSpecs
 
   alias App.OAuth.Manager
-  alias AppWeb.Schemas.OAuth.{SupportedProvidersList, AuthUrl}
+  alias AppWeb.Schemas.OAuth.{SupportedProvidersList, AuthUrl, Auth}
   alias App.{Accounts, Session}
 
   tags ["OAuth"]
@@ -24,7 +24,7 @@ defmodule AppWeb.OAuthController do
     summary: "Authenticate a user based on a OAuth auth code",
     description: "Tries to authenticate a user based on a OAuth auth code. If the user is already registered we log him in, otherwise he has to finish registration",
     responses: [
-      #TODO: ok: {"Response", "application/json", SupportedProvidersList}
+      ok: {"Response", "application/json", Auth}
     ]
   def auth(
       conn, 
