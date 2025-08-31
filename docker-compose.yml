@@ -1,5 +1,6 @@
 services:
   app:
+    container_name: app
     build:
       context: ./app
       dockerfile: Dockerfile.dev
@@ -11,16 +12,27 @@ services:
       - DB_NAME=app
       - DB_USER=dev
       - DB_PASSWORD=supersecret
+      - COOKIE_SIGN_SALT=testerino
+      - REDIS_HOST=cache
+      - REDIS_PORT=6379
     depends_on:
       - db
 
   db:
+    container_name: db
     image: postgres:17.6
     restart: unless-stopped
     environment:
       - POSTGRES_DB=app
       - POSTGRES_USER=dev
       - POSTGRES_PASSWORD=supersecret
+
+  cache:
+    container_name: cache
+    image: redis:8.2
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
 
   elixir-shell:
     image: elixir:1.18.4-alpine

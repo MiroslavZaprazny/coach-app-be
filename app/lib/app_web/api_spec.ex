@@ -1,6 +1,6 @@
 defmodule AppWeb.ApiSpec do
   alias OpenApiSpex.{Info, OpenApi, Paths, Server}
-  alias AppWeb.{Endpoint, Router}
+  alias AppWeb.Router
 
   @behaviour OpenApi
 
@@ -9,8 +9,7 @@ defmodule AppWeb.ApiSpec do
       %OpenApi{
         servers: [
           %Server{
-            url: "https://#{System.get_env("HOST", "localhost")}",
-            description: "Staging server"
+            url: "https://#{System.get_env("HOST", "localhost")}"
           },
         ],
         info: %Info {

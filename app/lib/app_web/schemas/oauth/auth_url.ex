@@ -1,12 +1,12 @@
-defmodule AppWeb.Schemas.HealthResponse do
+defmodule AppWeb.Schemas.OAuth.AuthUrl do
     alias OpenApiSpex.Schema
     require OpenApiSpex
 
     OpenApiSpex.schema(%{
-      title: "HealthResponse",
+      title: "AuthUrl",
       type: :object,
       properties: %{
-        status: %Schema{type: :string, example: "ok"}
+        auth_url: %Schema{type: :string, example: "google_auth_url"}
       }
     })
 end
