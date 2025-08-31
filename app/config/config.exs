@@ -42,7 +42,7 @@ config :phoenix, :json_library, Jason
 config :app, :google,
   client_id: System.get_env("GOOGLE_CLIENT_ID"),
   client_secret: System.get_env("GOOGLE_CLIENT_SECRET"),
-  redirect_uri: System.get_env("GOOGLE_OAUTH_REDIRECT_URI", "http://localhost:4000/api/auth/google/callback")
+  redirect_uri: System.get_env("GOOGLE_OAUTH_REDIRECT_URI")
 
 config :app, :redis,
   host: System.get_env("REDIS_HOST"),

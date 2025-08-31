@@ -71,8 +71,8 @@ defmodule AppWeb.OAuthController do
     ]
   def auth_url(conn, %{"provider" => provider_name}) do
     with {:ok, provider} <- Manager.get_provider(provider_name),
-         {:ok, token} <- Manager.generate_state_token(),
-         {:ok, auth_url} <- Manager.get_auth_url(provider, token) do
+         {:ok, state} <- Manager.generate_state_token(),
+         {:ok, auth_url} <- Manager.get_auth_url(provider, state) do
             conn
             |> json(%{auth_url: auth_url})
     else

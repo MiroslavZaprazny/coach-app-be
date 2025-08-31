@@ -3,12 +3,12 @@ defmodule App.Repo.Migrations.CreateUsers do
 
   def change do
     create table(:users) do
-      add :email, :string
-      add :name, :string
-      add :avatar_url, :string
-      add :oauth_provider, :string
-      add :oauth_id, :string
-      add :registration_status, :string
+      add :email, :string, null: false
+      add :name, :string, null: false
+      add :avatar_url, :string, null: false
+      add :oauth_provider, :string, null: false
+      add :oauth_id, :string, null: false
+      add :registration_status, :string, null: false
 
       timestamps(type: :utc_datetime)
     end
