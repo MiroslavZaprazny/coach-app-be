@@ -23,10 +23,11 @@ defmodule App.OAuth.Manager do
     {:ok, auth_url}
   end
 
-  def exchange_code_for_access_token(client, code) do
+  #Access token is saved to the OAuth2.Client instance
+  def fetch_access_token(client, code) do
     case OAuth2.Client.get_token(client, code: code) do
-      {:ok, %OAuth2.Client{token: %OAuth2.AccessToken{} = token}} ->
-        {:ok, token}
+      {:ok, %OAuth2.Client{} = updated_client} ->
+        {:ok, updated_client}
       
       {:ok, %OAuth2.Client{token: nil}} ->
         {:error, :no_token_received}

@@ -35,8 +35,8 @@ defmodule AppWeb.OAuthController do
   )  do
     with {:ok, provider} <- Manager.get_provider(provider_name),
          {:ok, client} <- provider.get_client(),
-         {:ok, _token} <- Manager.exchange_code_for_access_token(client, auth_code),
-         {:ok, info} <- provider.get_user_info(client),
+         {:ok, client_with_access_token} <- Manager.fetch_access_token(client, auth_code),
+         {:ok, info} <- provider.get_user_info(client_with_access_token),
          {:ok, user} <- Accounts.find_or_create_user(info) do
           case user.registration_status do
            :complete ->
