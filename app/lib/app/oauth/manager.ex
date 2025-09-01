@@ -17,7 +17,7 @@ defmodule App.OAuth.Manager do
   end
 
   def get_auth_url(provider, state) do
-    client = provider.get_client()
+    {:ok, client} = provider.get_client()
     auth_url = provider.authorize_url(client, state: state)
 
     {:ok, auth_url}

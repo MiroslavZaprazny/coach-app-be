@@ -3,7 +3,7 @@ defmodule App.OAuth.Providers.Google do
   def provider_name, do: "google"
 
   def get_client do
-    OAuth2.Client.new([
+    {:ok, OAuth2.Client.new([
       strategy: OAuth2.Strategy.AuthCode,
       client_id: client_id(),
       client_secret: client_secret(),
@@ -11,7 +11,7 @@ defmodule App.OAuth.Providers.Google do
       authorize_url: "/o/oauth2/v2/auth",
       token_url: "/o/oauth2/token",
       redirect_uri: redirect_uri()
-    ])
+    ])}
   end
 
   def authorize_url(client, opts \\ []) do
