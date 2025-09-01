@@ -26,10 +26,9 @@ defmodule App.OAuth.Providers.Google do
   end
 
   def get_user_info(client) do
-    IO.inspect(client, label: "Client before user info")
-
     case OAuth2.Client.get(client, "https://www.googleapis.com/oauth2/v2/userinfo") do
       {:ok, %OAuth2.Response{status_code: 200, body: user_data}} ->
+        IO.inspect(user_data, label: "User info from google")
         {:ok, %{
           email: user_data["email"],
           name: user_data["name"],

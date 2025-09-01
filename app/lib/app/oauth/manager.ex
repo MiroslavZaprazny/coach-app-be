@@ -25,8 +25,6 @@ defmodule App.OAuth.Manager do
 
   #Access token is saved to the OAuth2.Client instance
   def fetch_access_token(client, code) do
-    IO.inspect(client, label: "Client before code exchange")
-
     case OAuth2.Client.get_token(client, code: code) do
       {:ok, %OAuth2.Client{} = updated_client} ->
         {:ok, updated_client}
