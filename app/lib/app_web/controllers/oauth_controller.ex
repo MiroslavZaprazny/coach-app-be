@@ -38,8 +38,7 @@ defmodule AppWeb.OAuthController do
          {:ok, client_with_access_token} <- Manager.fetch_access_token(client, auth_code),
          {:ok, info} <- provider.get_user_info(client_with_access_token),
          {:ok, user} <- Accounts.find_or_create_user(info) do
-          case user.registration_status do
-           :complete ->
+          if user.registration_status == :complete do
               Session.create(user)
               |> Session.add_to_cookie(conn)
           end
