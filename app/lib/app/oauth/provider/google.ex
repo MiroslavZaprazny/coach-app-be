@@ -10,7 +10,8 @@ defmodule App.OAuth.Providers.Google do
       site: "https://accounts.google.com",
       authorize_url: "/o/oauth2/v2/auth",
       token_url: "/o/oauth2/token",
-      redirect_uri: redirect_uri()
+      redirect_uri: redirect_uri(),
+      serializers: %{"application/json" => Jason}
     ])}
   end
 
