@@ -24,8 +24,8 @@ defmodule App.OAuth.Providers.Google do
     OAuth2.Client.authorize_url!(client, Keyword.merge(default_opts, opts))
   end
 
-  def get_user_info(%OAuth2.AccessToken{} = token) do
-    case OAuth2.Client.get(token, "https://www.googleapis.com/oauth2/v2/userinfo") do
+  def get_user_info(client) do
+    case OAuth2.Client.get(client, "https://www.googleapis.com/oauth2/v2/userinfo") do
       {:ok, %OAuth2.Response{status_code: 200, body: user_data}} ->
         {:ok, %{
           email: user_data["email"],

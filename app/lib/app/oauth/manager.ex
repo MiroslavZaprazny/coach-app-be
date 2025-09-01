@@ -23,9 +23,7 @@ defmodule App.OAuth.Manager do
     {:ok, auth_url}
   end
 
-  def exchange_code_for_access_token(provider, code) do
-    client = provider.get_client()
-    
+  def exchange_code_for_access_token(client, code) do
     case OAuth2.Client.get_token(client, code: code) do
       {:ok, %OAuth2.Client{token: %OAuth2.AccessToken{} = token}} ->
         {:ok, token}
