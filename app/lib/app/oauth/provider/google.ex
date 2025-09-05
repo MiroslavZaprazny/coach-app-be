@@ -47,7 +47,7 @@ defmodule App.OAuth.Providers.Google do
     end
   end
 
-  defp client_id, do: Application.compile_env(:app, :google)[:client_id]
-  defp client_secret, do: Application.compile_env(:app, :google)[:client_secret]
-  defp redirect_uri, do: Application.compile_env(:app, :google)[:redirect_uri]
+  defp client_id, do: Application.get_env(:app, :google)[:client_id]
+  defp client_secret, do: Application.get_env(:app, :google)[:client_secret]
+  defp redirect_uri, do: Application.get_env(:app, :google)[:redirect_uri]
 end
