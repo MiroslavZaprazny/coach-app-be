@@ -1,5 +1,6 @@
 defmodule AppWeb.Router do
   use AppWeb, :router
+import Plug.BasicAuth
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -16,6 +17,10 @@ defmodule AppWeb.Router do
     plug :fetch_session
   end
 
+  pipeline :auth do
+    plug :basic_auth, username: Application.compile_env(:app, :auth)[:user], password: Application.compile_env(:app, :auth)[:password]
+  end
+
   pipeline :openapi do
     plug OpenApiSpex.Plug.PutApiSpec, module: AppWeb.ApiSpec
   end
@@ -27,7 +32,7 @@ defmodule AppWeb.Router do
   end
 
   scope "/api/oauth/providers", AppWeb do
-    pipe_through :api
+    pipe_through [:api, :auth]
 
     get "/", OAuthController, :providers
     post "/:provider", OAuthController, :auth

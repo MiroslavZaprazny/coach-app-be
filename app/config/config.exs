@@ -48,6 +48,10 @@ config :app, :redis,
   host: System.get_env("REDIS_HOST"),
   port: System.get_env("REDIS_PORT")
 
+config :app, :auth,
+  user: System.get_env("API_USER"),
+  password: System.get_env("API_PASSWORD")
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
