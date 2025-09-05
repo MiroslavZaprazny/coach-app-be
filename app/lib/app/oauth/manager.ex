@@ -2,7 +2,7 @@ defmodule App.OAuth.Manager do
   alias App.OAuth.Providers
 
   @providers %{
-    "google" => Providers.Google,
+    "google" => Providers.Google
   }
 
   def supported_providers, do: Map.keys(@providers)
@@ -10,6 +10,7 @@ defmodule App.OAuth.Manager do
   def get_provider(provider_name) when is_map_key(@providers, provider_name) do
     {:ok, @providers[provider_name]}
   end
+
   def get_provider(_), do: {:error, :unsupported_provider}
 
   def generate_state_token do
@@ -23,17 +24,22 @@ defmodule App.OAuth.Manager do
     {:ok, auth_url}
   end
 
-  #Access token is saved to the OAuth2.Client instance
+  # Access token is saved to the OAuth2.Client instance
   def fetch_access_token(client, code) do
     case OAuth2.Client.get_token(client, code: code) do
       {:ok, %OAuth2.Client{} = updated_client} ->
         {:ok, updated_client}
-      
+
       {:error, %OAuth2.Error{} = error} ->
         {:error, error}
-      
-      {:error, %OAuth2.Response{status_code: status_code, body: %{"error" => error, "error_description" => description}}} ->
-        {:error, "OAuth provider return returned status (#{status_code}) with error: #{error} - #{description}"}
+
+      {:error,
+       %OAuth2.Response{
+         status_code: status_code,
+         body: %{"error" => error, "error_description" => description}
+       }} ->
+        {:error,
+         "OAuth provider return returned status (#{status_code}) with error: #{error} - #{description}"}
 
       {:error, %OAuth2.Response{} = response} ->
         {:error, response}

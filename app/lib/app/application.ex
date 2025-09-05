@@ -14,7 +14,8 @@ defmodule App.Application do
       App.Repo,
       {DNSCluster, query: Application.get_env(:app, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: App.PubSub},
-      {Redix, host: redis_config[:host], port: String.to_integer(redis_config[:port]), name: :redix},
+      {Redix,
+       host: redis_config[:host], port: String.to_integer(redis_config[:port]), name: :redix},
       # Start a worker by calling: App.Worker.start_link(arg)
       # {App.Worker, arg},
       # Start to serve requests, typically the last entry

@@ -1,6 +1,6 @@
 defmodule AppWeb.Router do
   use AppWeb, :router
-import Plug.BasicAuth
+  import Plug.BasicAuth
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -18,7 +18,9 @@ import Plug.BasicAuth
   end
 
   pipeline :auth do
-    plug :basic_auth, username: Application.compile_env(:app, :auth)[:user], password: Application.compile_env(:app, :auth)[:password]
+    plug :basic_auth,
+      username: Application.compile_env(:app, :auth)[:user],
+      password: Application.compile_env(:app, :auth)[:password]
   end
 
   pipeline :openapi do

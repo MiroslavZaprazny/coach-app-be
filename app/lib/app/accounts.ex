@@ -39,12 +39,13 @@ defmodule App.Accounts do
   end
 
   def find_or_create_user(attrs) do
-      case Repo.get_by(User, email: Map.get(attrs, :email)) do
-        nil -> 
-          create_user(attrs)
-        user -> 
-          {:ok, user} 
-      end
+    case Repo.get_by(User, email: Map.get(attrs, :email)) do
+      nil ->
+        create_user(attrs)
+
+      user ->
+        {:ok, user}
+    end
   end
 
   @doc """

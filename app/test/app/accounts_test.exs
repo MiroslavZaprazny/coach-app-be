@@ -8,7 +8,15 @@ defmodule App.AccountsTest do
 
     import App.AccountsFixtures
 
-    @invalid_attrs %{role: nil, email: nil, first_name: nil, last_name: nil, phone: nil, oauth_provider: nil, oauth_id: nil}
+    @invalid_attrs %{
+      role: nil,
+      email: nil,
+      first_name: nil,
+      last_name: nil,
+      phone: nil,
+      oauth_provider: nil,
+      oauth_id: nil
+    }
 
     test "get_user!/1 returns the user with given id" do
       user = user_fixture()
@@ -16,7 +24,15 @@ defmodule App.AccountsTest do
     end
 
     test "create_user/1 with valid data creates a user" do
-      valid_attrs = %{role: "some role", email: "some email", first_name: "some first_name", last_name: "some last_name", phone: "some phone", oauth_provider: "some oauth_provider", oauth_id: "some oauth_id"}
+      valid_attrs = %{
+        role: "some role",
+        email: "some email",
+        first_name: "some first_name",
+        last_name: "some last_name",
+        phone: "some phone",
+        oauth_provider: "some oauth_provider",
+        oauth_id: "some oauth_id"
+      }
 
       assert {:ok, %User{} = user} = Accounts.create_user(valid_attrs)
       assert user.role == "some role"
@@ -34,7 +50,16 @@ defmodule App.AccountsTest do
 
     test "update_user/2 with valid data updates the user" do
       user = user_fixture()
-      update_attrs = %{role: "some updated role", email: "some updated email", first_name: "some updated first_name", last_name: "some updated last_name", phone: "some updated phone", oauth_provider: "some updated oauth_provider", oauth_id: "some updated oauth_id"}
+
+      update_attrs = %{
+        role: "some updated role",
+        email: "some updated email",
+        first_name: "some updated first_name",
+        last_name: "some updated last_name",
+        phone: "some updated phone",
+        oauth_provider: "some updated oauth_provider",
+        oauth_id: "some updated oauth_id"
+      }
 
       assert {:ok, %User{} = user} = Accounts.update_user(user, update_attrs)
       assert user.role == "some updated role"

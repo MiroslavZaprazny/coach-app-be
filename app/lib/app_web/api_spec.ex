@@ -6,18 +6,18 @@ defmodule AppWeb.ApiSpec do
 
   @impl OpenApi
   def spec do
-      %OpenApi{
-        servers: [
-          %Server{
-            url: "https://#{System.get_env("HOST", "localhost")}"
-          },
-        ],
-        info: %Info {
-          title: "Coach app API",
-          version: "1.0",
-        },
-        paths: Paths.from_router(Router)
-      }
-      |> OpenApiSpex.resolve_schema_modules()
+    %OpenApi{
+      servers: [
+        %Server{
+          url: "https://#{System.get_env("HOST", "localhost")}"
+        }
+      ],
+      info: %Info{
+        title: "Coach app API",
+        version: "1.0"
+      },
+      paths: Paths.from_router(Router)
+    }
+    |> OpenApiSpex.resolve_schema_modules()
   end
 end

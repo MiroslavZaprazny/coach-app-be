@@ -18,7 +18,14 @@ defmodule App.Accounts.User do
   def changeset(user, attrs) do
     user
     |> cast(attrs, [:email, :name, :oauth_provider, :oauth_id, :registration_status, :avatar_url])
-    |> validate_required([:email, :name, :oauth_provider, :oauth_id, :registration_status, :avatar_url])
+    |> validate_required([
+      :email,
+      :name,
+      :oauth_provider,
+      :oauth_id,
+      :registration_status,
+      :avatar_url
+    ])
     |> unique_constraint(:oauth_id)
   end
 end
