@@ -35,6 +35,9 @@ defmodule App.OAuth.Manager do
       {:error, %OAuth2.Error{} = error} ->
         {:error, error}
       
+      {:ok, %OAuth2.Response{status_code: status_code, body: %{"error" => error, "error_description" => description}}} ->
+        {:error, "OAuth provider return returned status (#{status_code}) with error: #{error} - #{description}"}
+
       {:error, %OAuth2.Response{} = response} ->
         {:error, response}
     end
