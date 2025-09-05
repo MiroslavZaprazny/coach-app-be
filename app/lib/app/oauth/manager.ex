@@ -29,13 +29,10 @@ defmodule App.OAuth.Manager do
       {:ok, %OAuth2.Client{} = updated_client} ->
         {:ok, updated_client}
       
-      {:ok, %OAuth2.Client{token: nil}} ->
-        {:error, :no_token_received}
-      
       {:error, %OAuth2.Error{} = error} ->
         {:error, error}
       
-      {:ok, %OAuth2.Response{status_code: status_code, body: %{"error" => error, "error_description" => description}}} ->
+      {:error, %OAuth2.Response{status_code: status_code, body: %{"error" => error, "error_description" => description}}} ->
         {:error, "OAuth provider return returned status (#{status_code}) with error: #{error} - #{description}"}
 
       {:error, %OAuth2.Response{} = response} ->
