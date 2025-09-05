@@ -1,9 +1,9 @@
-defmodule AppWeb.Schemas.OAuth.AuthUrl do
+defmodule AppWeb.Schemas.OAuth.AuthUrlResponseSchema do
     alias OpenApiSpex.Schema
     require OpenApiSpex
 
     OpenApiSpex.schema(%{
-      title: "AuthUrl",
+      title: "AuthUrlResponse",
       type: :object,
       properties: %{
         auth_url: %Schema{type: :string, example: "google_auth_url"}

@@ -3,7 +3,7 @@ defmodule AppWeb.OAuthController do
   use OpenApiSpex.ControllerSpecs
 
   alias App.OAuth.Manager
-  alias AppWeb.Schemas.OAuth.{SupportedProvidersList, AuthUrl, Auth}
+  alias AppWeb.Schemas.OAuth.{SupportedProvidersListResponseSchema, AuthUrlResponseSchema, AuthResponseSchema, AuthRequestBodySchema}
   alias App.{Accounts, Session}
 
   tags ["OAuth"]
@@ -11,7 +11,7 @@ defmodule AppWeb.OAuthController do
     summary: "Supported OAuth providers",
     description: "Returns a list of supported OAuth providers",
     responses: [
-      ok: {"Response", "application/json", SupportedProvidersList}
+      ok: {"Response", "application/json", SupportedProvidersListResponseSchema}
     ]
   def providers(conn, _params) do
     conn
@@ -23,8 +23,12 @@ defmodule AppWeb.OAuthController do
   operation :auth,
     summary: "Authenticate a user based on a OAuth auth code",
     description: "Tries to authenticate a user based on a OAuth auth code. If the user is already registered we log him in, otherwise he has to finish registration",
+    parameters: [
+      provider: [in: :path, description: "OAuth Provider", type: :string, example: "google"]
+    ],
+    request_body: {"User params", "application/json", AuthRequestBodySchema},
     responses: [
-      ok: {"Response", "application/json", Auth}
+      ok: {"Response", "application/json", AuthResponseSchema}
     ]
   def auth(
       conn, 
@@ -67,7 +71,7 @@ defmodule AppWeb.OAuthController do
     summary: "Generates auth url",
     description: "Generates an auth url for a given provider",
     responses: [
-      ok: {"Response", "application/json", AuthUrl}
+      ok: {"Response", "application/json", AuthUrlResponseSchema}
     ]
   def auth_url(conn, %{"provider" => provider_name}) do
     with {:ok, provider} <- Manager.get_provider(provider_name),

@@ -1,9 +1,9 @@
-defmodule AppWeb.Schemas.OAuth.SupportedProvidersList do
+defmodule AppWeb.Schemas.OAuth.SupportedProvidersListResponseSchema do
     alias OpenApiSpex.Schema
     require OpenApiSpex
 
     OpenApiSpex.schema(%{
-      title: "SupportedProviderList",
+      title: "SupportedProviderListResponse",
       type: :object,
       properties: %{
         providers: %Schema{type: :array, example: ["google"]}

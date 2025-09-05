@@ -1,9 +1,9 @@
-defmodule AppWeb.Schemas.OAuth.Auth do
+defmodule AppWeb.Schemas.OAuth.AuthResponseSchema do
     alias OpenApiSpex.Schema
     require OpenApiSpex
 
     OpenApiSpex.schema(%{
-      title: "Auth",
+      title: "AuthResponseSchema",
       type: :object,
       properties: %{
         user: %Schema{type: :object, properties: %{
