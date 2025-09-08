@@ -41,6 +41,13 @@ defmodule AppWeb.Router do
     get "/:provider/auth_url", OAuthController, :auth_url
   end
 
+  scope "/api/auth", AppWeb do
+    pipe_through [:api, :auth]
+
+    post "/register", AuthController, :register
+    post "/login", AuthController, :login
+  end
+
   scope "/api" do
     pipe_through [:api, :openapi]
 

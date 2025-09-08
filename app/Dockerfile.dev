@@ -2,6 +2,8 @@ FROM elixir:1.18.4-alpine
 
 WORKDIR /app
 
+RUN apk add build-base
+
 RUN mix local.hex --force && \
     mix local.rebar --force
 

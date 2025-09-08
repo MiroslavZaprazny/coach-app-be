@@ -7,9 +7,10 @@ defmodule AppWeb.OAuthController do
   alias AppWeb.Schemas.OAuth.{
     SupportedProvidersListResponseSchema,
     AuthUrlResponseSchema,
-    AuthResponseSchema,
     AuthRequestBodySchema
   }
+
+  alias AppWeb.Schemas.User.UserResponseSchema
 
   alias App.{Accounts, Session}
 
@@ -40,7 +41,7 @@ defmodule AppWeb.OAuthController do
     ],
     request_body: {"User params", "application/json", AuthRequestBodySchema},
     responses: [
-      ok: {"Response", "application/json", AuthResponseSchema}
+      ok: {"Response", "application/json", UserResponseSchema}
     ]
   )
 
@@ -55,7 +56,7 @@ defmodule AppWeb.OAuthController do
          {:ok, client} <- provider.get_client(),
          {:ok, client_with_access_token} <- Manager.fetch_access_token(client, auth_code),
          {:ok, info} <- provider.get_user_info(client_with_access_token),
-         {:ok, user} <- Accounts.find_or_create_user(info) do
+         {:ok, user} <- Accounts.find_or_create_oauth_user(info) do
       if user.registration_status == :complete do
         Session.create(user)
         |> Session.add_to_cookie(conn)

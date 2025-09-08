@@ -4,81 +4,29 @@ defmodule App.Accounts do
 
   alias App.Accounts.User
 
-  @doc """
-  Gets a single user.
-
-  Raises `Ecto.NoResultsError` if the User does not exist.
-
-  ## Examples
-
-      iex> get_user!(123)
-      %User{}
-
-      iex> get_user!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_user!(id), do: Repo.get!(User, id)
-
-  @doc """
-  Creates a user.
-
-  ## Examples
-
-      iex> create_user(%{field: value})
-      {:ok, %User{}}
-
-      iex> create_user(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_user(attrs) do
+  defp create_oauth_user(attrs) do
     %User{}
-    |> User.changeset(Map.put(attrs, :registration_status, :incomplete))
+    |> User.oauth_changeset(Map.put(attrs, :registration_status, :incomplete))
     |> Repo.insert()
   end
 
-  def find_or_create_user(attrs) do
+  def find_or_create_oauth_user(attrs) do
     case Repo.get_by(User, email: Map.get(attrs, :email)) do
       nil ->
-        create_user(attrs)
+        create_oauth_user(attrs)
 
       user ->
         {:ok, user}
     end
   end
 
-  @doc """
-  Updates a user.
-
-  ## Examples
-
-      iex> update_user(user, %{field: new_value})
-      {:ok, %User{}}
-
-      iex> update_user(user, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_user(%User{} = user, attrs) do
-    user
-    |> User.changeset(attrs)
-    |> Repo.update()
+  def register(attrs) do
+    %User{}
+    |> User.registration_changeset(Map.put(attrs, "registration_status", :incomplete))
+    |> Repo.insert()
   end
 
-  @doc """
-  Deletes a user.
-
-  ## Examples
-
-      iex> delete_user(user)
-      {:ok, %User{}}
-
-      iex> delete_user(user)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_user(%User{} = user) do
-    Repo.delete(user)
+  def get_by_email(email) do
+    Repo.get_by(User, email: email)
   end
 end
