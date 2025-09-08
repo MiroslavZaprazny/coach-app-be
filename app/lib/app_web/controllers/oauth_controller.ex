@@ -7,9 +7,10 @@ defmodule AppWeb.OAuthController do
   alias AppWeb.Schemas.OAuth.{
     SupportedProvidersListResponseSchema,
     AuthUrlResponseSchema,
-    AuthResponseSchema,
     AuthRequestBodySchema
   }
+
+  alias AppWeb.Schemas.User.UserResponseSchema
 
   alias App.{Accounts, Session}
 
@@ -40,7 +41,7 @@ defmodule AppWeb.OAuthController do
     ],
     request_body: {"User params", "application/json", AuthRequestBodySchema},
     responses: [
-      ok: {"Response", "application/json", AuthResponseSchema}
+      ok: {"Response", "application/json", UserResponseSchema}
     ]
   )
 

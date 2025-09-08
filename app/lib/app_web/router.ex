@@ -45,6 +45,7 @@ defmodule AppWeb.Router do
     pipe_through [:api, :auth]
 
     post "/register", AuthController, :register
+    post "/login", AuthController, :login
   end
 
   scope "/api" do
