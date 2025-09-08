@@ -54,7 +54,8 @@ defmodule App.MixProject do
       {:bandit, "~> 1.5"},
       {:open_api_spex, "~> 3.21"},
       {:oauth2, "~> 2.0"},
-      {:redix, "~> 1.5.2"}
+      {:redix, "~> 1.5.2"},
+      {:bcrypt_elixir, "~> 3.3"}
     ]
   end
 
