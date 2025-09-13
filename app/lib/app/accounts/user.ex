@@ -33,24 +33,19 @@ defmodule App.Accounts.User do
   end
 
   def registration_changeset(user, attrs) do
-    try do
-      user
-      |> cast(attrs, [:email, :password, :password_confirmation, :registration_status])
-      |> validate_required([
-        :email,
-        :registration_status,
-        :password,
-        :password_confirmation
-      ])
-      |> validate_format(:email, ~r/^[^\s]+@[^\s]+\.[^\s]+$/, message: "must be a valid email")
-      |> validate_length(:password, min: 8, max: 128)
-      |> validate_confirmation(:password, message: "passwords do not match")
-      |> unique_constraint(:email)
-      |> hash_password()
-    rescue
-      e in Ecto.CastError ->
-        IO.inspect(e)
-    end
+    user
+    |> cast(attrs, [:email, :password, :password_confirmation, :registration_status])
+    |> validate_required([
+      :email,
+      :registration_status,
+      :password,
+      :password_confirmation
+    ])
+    |> validate_format(:email, ~r/^[^\s]+@[^\s]+\.[^\s]+$/, message: "must be a valid email")
+    |> validate_length(:password, min: 8, max: 128)
+    |> validate_confirmation(:password, message: "passwords do not match")
+    |> unique_constraint(:email)
+    |> hash_password()
   end
 
   defp hash_password(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do

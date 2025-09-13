@@ -25,8 +25,6 @@ defmodule AppWeb.AuthController do
           "password_confirmation" => _password_confirmation
         } = params
       ) do
-    IO.inspect(params)
-
     case Accounts.register(params) do
       {:ok, user} ->
         Session.create(user)
