@@ -19,5 +19,5 @@ CMD ["mix", "phx.server"]
 FROM base as test
 COPY . .
 RUN mix deps.get
-RUN mix compile
+RUN mix deps.compile
 CMD ["mix", "test"]
