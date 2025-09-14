@@ -62,7 +62,7 @@ defmodule AppWeb.AuthControllerTest do
           }
         )
 
-      assert json_response(conn, 201)
+      assert json_response(conn, 422)
     end
 
     test "email already registered", %{conn: conn} do
