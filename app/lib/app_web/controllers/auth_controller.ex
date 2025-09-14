@@ -1,9 +1,11 @@
 defmodule AppWeb.AuthController do
   use AppWeb, :controller
   use OpenApiSpex.ControllerSpecs
+  alias OpenApiSpex.Schema
+  require OpenApiSpex
   alias App.{Accounts, Session}
   alias AppWeb.Schemas.Auth.{RegisterRequestBodySchema, LoginRequestBodySchema}
-  alias AppWeb.Schemas.User.{UserResponseSchema, UserInfoInvalidSessionSchema}
+  alias AppWeb.Schemas.User.{UserResponseSchema, UserSessionNotFound}
   alias App.Accounts.User
 
   tags(["Auth"])
@@ -27,10 +29,9 @@ defmodule AppWeb.AuthController do
       ) do
     case Accounts.register(params) do
       {:ok, user} ->
-        case Session.create(user) do
-          {:ok, session_id} ->
+        case Session.create(conn, user) do
+          {:ok, conn} ->
             conn
-            |> Session.add_to_cookie(session_id)
             |> json(%{user: user})
 
           {:error, _reason} ->
@@ -73,10 +74,9 @@ defmodule AppWeb.AuthController do
             |> json(%{error: "Invalid credentials"})
 
           true ->
-            case Session.create(user) do
-              {:ok, session_id} ->
+            case Session.create(conn, user) do
+              {:ok, conn} ->
                 conn
-                |> Session.add_to_cookie(session_id)
                 |> json(%{user: user})
 
               {:error, _reason} ->
@@ -93,7 +93,7 @@ defmodule AppWeb.AuthController do
     description: "Retrieves user info based on the session",
     responses: [
       ok: {"Response", "application/json", UserResponseSchema},
-      unprocessable_entity: {"Response", "application/json", UserInfoInvalidSessionSchema}
+      unprocessable_entity: {"Response", "application/json", UserSessionNotFound}
     ]
   )
 
@@ -118,6 +118,39 @@ defmodule AppWeb.AuthController do
             conn
             |> put_status(:unprocessable_entity)
             |> json(%{error: "No session found"})
+        end
+    end
+  end
+
+  operation(:logout,
+    summary: "Logout",
+    description: "Destroy user session",
+    responses: [
+      unprocessable_entity: {"Response", "application/json", UserSessionNotFound}
+    ]
+  )
+
+  def logout(conn, _params) do
+    session_id =
+      conn
+      |> get_session(:user_session_id)
+
+    case session_id do
+      nil ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> json(%{error: "No session found"})
+
+      session_id ->
+        case Session.destroy(conn, session_id) do
+          {:ok, conn} ->
+            conn
+            |> json(%{status: "ok"})
+
+          {:error, _reason} ->
+            conn
+            |> put_status(:internal_server_error)
+            |> json(%{error: "Internal server error"})
         end
     end
   end

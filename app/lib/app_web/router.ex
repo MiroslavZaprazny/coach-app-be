@@ -50,6 +50,7 @@ defmodule AppWeb.Router do
 
     post "/register", AuthController, :register
     post "/login", AuthController, :login
+    post "/logout", AuthController, :logout
     get "/user-info", AuthController, :user_info
   end
 

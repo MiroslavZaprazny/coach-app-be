@@ -56,10 +56,8 @@ defmodule AppWeb.OAuthController do
          {:ok, client_with_access_token} <- Manager.fetch_access_token(client, auth_code),
          {:ok, info} <- provider.get_user_info(client_with_access_token),
          {:ok, user} <- Accounts.find_or_create_oauth_user(info) do
-      session_id = Session.create(user)
-
       conn
-      |> Session.add_to_cookie(session_id)
+      |> Session.create(user)
       |> json(%{user: user})
     else
       {:error, :unsupported_provider} ->

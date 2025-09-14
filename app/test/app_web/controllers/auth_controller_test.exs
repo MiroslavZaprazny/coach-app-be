@@ -160,4 +160,25 @@ defmodule AppWeb.AuthControllerTest do
       assert json_response(conn, 422)
     end
   end
+
+  describe "logout" do
+    test "happy path", %{conn: conn} do
+      user = App.AccountsFixtures.user_fixture()
+
+      conn =
+        post(
+          conn,
+          ~p"/api/auth/login",
+          %{email: user.email, password: "mypassword123"}
+        )
+
+      assert json_response(conn, 200)
+      assert get_session(conn, :user_session_id) != nil
+
+      conn = post(conn, ~p"/api/auth/logout")
+
+      assert json_response(conn, 200)
+      assert get_session(conn, :user_session_id) == nil
+    end
+  end
 end
