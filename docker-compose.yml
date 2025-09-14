@@ -3,7 +3,7 @@ services:
     container_name: app
     build:
       context: ./app
-      dockerfile: Dockerfile.dev
+      target: dev
     ports:
       - "4000:4000"
     volumes:
@@ -35,8 +35,3 @@ services:
     restart: unless-stopped
     ports:
       - "6379:6379"
-
-  elixir-shell:
-    image: elixir:1.18.4-alpine
-    volumes:
-      - ./app:/app
