@@ -27,8 +27,9 @@ defmodule AppWeb.AuthController do
       ) do
     case Accounts.register(params) do
       {:ok, user} ->
-        Session.create(user)
-        |> Session.add_to_cookie(conn)
+        conn =
+          Session.create(user)
+          |> Session.add_to_cookie(conn)
 
         conn
         |> json(%{
@@ -37,6 +38,12 @@ defmodule AppWeb.AuthController do
             email: user.email
           }
         })
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> put_view(json: AppWeb.ChangesetJSON)
+        |> render(:error, changeset: changeset)
     end
   end
 
@@ -61,8 +68,9 @@ defmodule AppWeb.AuthController do
       user ->
         case User.verify_password(user, password) do
           true ->
-            Session.create(user)
-            |> Session.add_to_cookie(conn)
+            conn =
+              Session.create(user)
+              |> Session.add_to_cookie(conn)
 
             conn
             |> json(%{

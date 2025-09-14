@@ -34,8 +34,7 @@ defmodule AppWeb.OAuthController do
 
   operation(:auth,
     summary: "Authenticate a user based on a OAuth auth code",
-    description:
-      "Tries to authenticate a user based on a OAuth auth code. If the user is already registered we log him in, otherwise he has to finish registration",
+    description: "Tries to authenticate a user based on the provider OAuth auth code",
     parameters: [
       provider: [in: :path, description: "OAuth Provider", type: :string, example: "google"]
     ],
@@ -57,12 +56,10 @@ defmodule AppWeb.OAuthController do
          {:ok, client_with_access_token} <- Manager.fetch_access_token(client, auth_code),
          {:ok, info} <- provider.get_user_info(client_with_access_token),
          {:ok, user} <- Accounts.find_or_create_oauth_user(info) do
-      if user.registration_status == :complete do
-        Session.create(user)
-        |> Session.add_to_cookie(conn)
-      end
+      session_id = Session.create(user)
 
       conn
+      |> Session.add_to_cookie(session_id)
       |> json(%{
         user: %{
           registration_status: user.registration_status,
@@ -74,12 +71,12 @@ defmodule AppWeb.OAuthController do
     else
       {:error, :unsupported_provider} ->
         conn
-        |> put_status(:bad_request)
+        |> put_status(:unprocessable_entity)
         |> json(%{error: "Unsupported provider", supported: Manager.supported_providers()})
 
       {:error, reason} ->
         conn
-        |> put_status(:bad_request)
+        |> put_status(:unprocessable_entity)
         |> json(%{error: "Auth failed", reason: inspect(reason)})
     end
   end
@@ -103,7 +100,7 @@ defmodule AppWeb.OAuthController do
     else
       {:error, :unsupported_provider} ->
         conn
-        |> put_status(:bad_request)
+        |> put_status(:unprocessable_entity)
         |> json(%{error: "Unsupported provider", supported: Manager.supported_providers()})
 
       {:error, reason} ->
