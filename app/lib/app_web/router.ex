@@ -42,7 +42,7 @@ defmodule AppWeb.Router do
 
     get "/", OAuthController, :providers
     post "/:provider", OAuthController, :auth
-    get "/:provider/auth_url", OAuthController, :auth_url
+    get "/:provider/auth-url", OAuthController, :auth_url
   end
 
   scope "/api/auth", AppWeb do
@@ -50,6 +50,7 @@ defmodule AppWeb.Router do
 
     post "/register", AuthController, :register
     post "/login", AuthController, :login
+    get "/user-info", AuthController, :user_info
   end
 
   scope "/api" do

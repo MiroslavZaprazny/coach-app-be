@@ -60,14 +60,7 @@ defmodule AppWeb.OAuthController do
 
       conn
       |> Session.add_to_cookie(session_id)
-      |> json(%{
-        user: %{
-          registration_status: user.registration_status,
-          email: user.email,
-          name: user.name,
-          avatar_url: user.avatar_url
-        }
-      })
+      |> json(%{user: user})
     else
       {:error, :unsupported_provider} ->
         conn

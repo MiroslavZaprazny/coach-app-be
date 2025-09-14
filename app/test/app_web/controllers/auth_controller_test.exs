@@ -14,7 +14,7 @@ defmodule AppWeb.AuthControllerTest do
         )
 
       assert json_response(conn, 200)
-      assert get_session(conn, :session_id) != nil
+      assert get_session(conn, :user_session_id) != nil
 
       user = Accounts.get_by_email(email)
       assert user.registration_status == :incomplete
@@ -91,7 +91,73 @@ defmodule AppWeb.AuthControllerTest do
         )
 
       assert json_response(conn, 200)
-      assert get_session(conn, :session_id) != nil
+      assert get_session(conn, :user_session_id) != nil
+    end
+
+    test "invalid email", %{conn: conn} do
+      user = App.AccountsFixtures.user_fixture()
+
+      conn =
+        post(
+          conn,
+          ~p"/api/auth/login",
+          %{email: "#{user.email}123", password: "mypassword123"}
+        )
+
+      assert json_response(conn, 422)
+      assert get_session(conn, :user_session_id) == nil
+    end
+
+    test "invalid password", %{conn: conn} do
+      user = App.AccountsFixtures.user_fixture()
+
+      conn =
+        post(
+          conn,
+          ~p"/api/auth/login",
+          %{email: user.email, password: "testerino123"}
+        )
+
+      assert json_response(conn, 422)
+      assert get_session(conn, :user_session_id) == nil
+    end
+  end
+
+  describe "user info" do
+    test "happy path after registration", %{conn: conn} do
+      email = "myemail@gmail.com"
+
+      conn =
+        post(
+          conn,
+          ~p"/api/auth/register",
+          %{email: email, password: "mypassword123", password_confirmation: "mypassword123"}
+        )
+
+      assert json_response(conn, 200)
+      assert get_session(conn, :user_session_id) != nil
+
+      conn = get(conn, ~p"/api/auth/user-info")
+      assert json_response(conn, 200)
+
+      assert %{
+               "avatar_url" => avatar_url,
+               "email" => email,
+               "id" => id,
+               "name" => name,
+               "registration_status" => registration_status
+             } = json_response(conn, 200)["user"]
+
+      assert avatar_url == nil
+      assert name == nil
+      assert email == email
+      assert id != nil
+      assert registration_status == "incomplete"
+    end
+
+    test "session cookie not sent in request", %{conn: conn} do
+      conn = get(conn, ~p"/api/auth/user-info")
+      assert json_response(conn, 422)
     end
   end
 end

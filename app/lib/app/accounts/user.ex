@@ -3,6 +3,7 @@ defmodule App.Accounts.User do
   import Ecto.Changeset
   alias Ecto.Enum
 
+  @derive {Jason.Encoder, only: [:id, :name, :avatar_url, :email, :registration_status]}
   schema "users" do
     field :oauth_id, :string
     field :oauth_provider, Enum, values: [:google]

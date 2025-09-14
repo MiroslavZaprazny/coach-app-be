@@ -3,7 +3,7 @@ defmodule AppWeb.AuthController do
   use OpenApiSpex.ControllerSpecs
   alias App.{Accounts, Session}
   alias AppWeb.Schemas.Auth.{RegisterRequestBodySchema, LoginRequestBodySchema}
-  alias AppWeb.Schemas.User.UserResponseSchema
+  alias AppWeb.Schemas.User.{UserResponseSchema, UserInfoInvalidSessionSchema}
   alias App.Accounts.User
 
   tags(["Auth"])
@@ -27,17 +27,17 @@ defmodule AppWeb.AuthController do
       ) do
     case Accounts.register(params) do
       {:ok, user} ->
-        conn =
-          Session.create(user)
-          |> Session.add_to_cookie(conn)
+        case Session.create(user) do
+          {:ok, session_id} ->
+            conn
+            |> Session.add_to_cookie(session_id)
+            |> json(%{user: user})
 
-        conn
-        |> json(%{
-          user: %{
-            registration_status: user.registration_status,
-            email: user.email
-          }
-        })
+          {:error, _reason} ->
+            conn
+            |> put_status(:internal_server_error)
+            |> json(%{error: "Internal server error"})
+        end
 
       {:error, %Ecto.Changeset{} = changeset} ->
         conn
@@ -67,23 +67,57 @@ defmodule AppWeb.AuthController do
 
       user ->
         case User.verify_password(user, password) do
-          true ->
-            conn =
-              Session.create(user)
-              |> Session.add_to_cookie(conn)
-
-            conn
-            |> json(%{
-              user: %{
-                registration_status: user.registration_status,
-                email: user.email
-              }
-            })
-
           false ->
             conn
             |> put_status(:unprocessable_entity)
             |> json(%{error: "Invalid credentials"})
+
+          true ->
+            case Session.create(user) do
+              {:ok, session_id} ->
+                conn
+                |> Session.add_to_cookie(session_id)
+                |> json(%{user: user})
+
+              {:error, _reason} ->
+                conn
+                |> put_status(:internal_server_error)
+                |> json(%{error: "Internal server error"})
+            end
+        end
+    end
+  end
+
+  operation(:user_info,
+    summary: "Auth user info",
+    description: "Retrieves user info based on the session",
+    responses: [
+      ok: {"Response", "application/json", UserResponseSchema},
+      unprocessable_entity: {"Response", "application/json", UserInfoInvalidSessionSchema}
+    ]
+  )
+
+  def user_info(conn, _params) do
+    session_id =
+      conn
+      |> get_session(:user_session_id)
+
+    case session_id do
+      nil ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> json(%{error: "No session found"})
+
+      session_id ->
+        case Session.get(session_id) do
+          {:ok, data} ->
+            conn
+            |> json(%{user: data})
+
+          {:error, :not_found} ->
+            conn
+            |> put_status(:unprocessable_entity)
+            |> json(%{error: "No session found"})
         end
     end
   end

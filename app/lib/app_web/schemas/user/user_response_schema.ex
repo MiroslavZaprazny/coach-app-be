@@ -9,6 +9,7 @@ defmodule AppWeb.Schemas.User.UserResponseSchema do
       user: %Schema{
         type: :object,
         properties: %{
+          id: %Schema{type: :int, example: "9"},
           name: %Schema{type: :string, example: "John Doe"},
           email: %Schema{type: :string, example: "john.doe@email.com"},
           avatar_url: %Schema{type: :string, example: "https://jondoepicture.com"},
