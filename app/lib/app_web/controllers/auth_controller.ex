@@ -1,8 +1,6 @@
 defmodule AppWeb.AuthController do
   use AppWeb, :controller
   use OpenApiSpex.ControllerSpecs
-  alias OpenApiSpex.Schema
-  require OpenApiSpex
   alias App.{Accounts, Session}
   alias AppWeb.Schemas.Auth.{RegisterRequestBodySchema, LoginRequestBodySchema}
   alias AppWeb.Schemas.User.{UserResponseSchema, UserSessionNotFound}
