@@ -17,7 +17,12 @@ COPY lib lib
 CMD ["mix", "phx.server"]
 
 FROM base as test
-COPY . .
+ENV MIX_ENV=test
+COPY mix.exs mix.lock ./
 RUN mix deps.get
+COPY config config
 RUN mix deps.compile
+COPY priv priv
+COPY lib lib
+COPY test test
 CMD ["mix", "test"]
