@@ -17,7 +17,6 @@ COPY lib lib
 CMD ["mix", "phx.server"]
 
 FROM base as test
-ENV MIX_ENV=test
 COPY . .
 RUN mix deps.get
 RUN mix compile

@@ -17,6 +17,7 @@ services:
       - REDIS_PORT=6379
       - API_USER=dev
       - API_PASSWORD=dev
+      - MIX_ENV=test
     depends_on:
       - db
     command: >
