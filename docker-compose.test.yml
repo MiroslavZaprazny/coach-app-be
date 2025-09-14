@@ -6,8 +6,6 @@ services:
       target: test
     ports:
       - "4000:4000"
-    volumes:
-      - ./app:/app
     environment:
       - DB_NAME=app
       - DB_USER=dev
