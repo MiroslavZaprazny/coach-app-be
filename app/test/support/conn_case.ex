@@ -33,6 +33,13 @@ defmodule AppWeb.ConnCase do
 
   setup tags do
     App.DataCase.setup_sandbox(tags)
-    {:ok, conn: Phoenix.ConnTest.build_conn()}
+    auth_config = Application.get_env(:app, :auth)
+    bearer_token = "Basic " <> Base.encode64(auth_config[:user] <> ":" <> auth_config[:password])
+
+    conn =
+      Phoenix.ConnTest.build_conn()
+      |> Plug.Conn.put_req_header("authorization", bearer_token)
+
+    {:ok, conn: conn}
   end
 end

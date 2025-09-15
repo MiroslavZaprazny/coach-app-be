@@ -19,8 +19,12 @@ defmodule AppWeb.Router do
 
   pipeline :auth do
     plug :basic_auth,
-      username: Application.compile_env(:app, :auth)[:user],
-      password: Application.compile_env(:app, :auth)[:password]
+      # TODO: compile_env should be used instead of get_env but it fails in test environment
+      # username: Application.compile_env(:app, :auth)[:user],
+      # password: Application.compile_env(:app, :auth)[:password]
+
+      username: Application.get_env(:app, :auth)[:user],
+      password: Application.get_env(:app, :auth)[:password]
   end
 
   pipeline :openapi do
@@ -38,7 +42,16 @@ defmodule AppWeb.Router do
 
     get "/", OAuthController, :providers
     post "/:provider", OAuthController, :auth
-    get "/:provider/auth_url", OAuthController, :auth_url
+    get "/:provider/auth-url", OAuthController, :auth_url
+  end
+
+  scope "/api/auth", AppWeb do
+    pipe_through [:api, :auth]
+
+    post "/register", AuthController, :register
+    post "/login", AuthController, :login
+    post "/logout", AuthController, :logout
+    get "/user-info", AuthController, :user_info
   end
 
   scope "/api" do

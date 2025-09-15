@@ -7,9 +7,10 @@ defmodule AppWeb.OAuthController do
   alias AppWeb.Schemas.OAuth.{
     SupportedProvidersListResponseSchema,
     AuthUrlResponseSchema,
-    AuthResponseSchema,
     AuthRequestBodySchema
   }
+
+  alias AppWeb.Schemas.User.UserResponseSchema
 
   alias App.{Accounts, Session}
 
@@ -33,14 +34,13 @@ defmodule AppWeb.OAuthController do
 
   operation(:auth,
     summary: "Authenticate a user based on a OAuth auth code",
-    description:
-      "Tries to authenticate a user based on a OAuth auth code. If the user is already registered we log him in, otherwise he has to finish registration",
+    description: "Tries to authenticate a user based on the provider OAuth auth code",
     parameters: [
       provider: [in: :path, description: "OAuth Provider", type: :string, example: "google"]
     ],
     request_body: {"User params", "application/json", AuthRequestBodySchema},
     responses: [
-      ok: {"Response", "application/json", AuthResponseSchema}
+      ok: {"Response", "application/json", UserResponseSchema}
     ]
   )
 
@@ -55,30 +55,19 @@ defmodule AppWeb.OAuthController do
          {:ok, client} <- provider.get_client(),
          {:ok, client_with_access_token} <- Manager.fetch_access_token(client, auth_code),
          {:ok, info} <- provider.get_user_info(client_with_access_token),
-         {:ok, user} <- Accounts.find_or_create_user(info) do
-      if user.registration_status == :complete do
-        Session.create(user)
-        |> Session.add_to_cookie(conn)
-      end
-
+         {:ok, user} <- Accounts.find_or_create_oauth_user(info) do
       conn
-      |> json(%{
-        user: %{
-          registration_status: user.registration_status,
-          email: user.email,
-          name: user.name,
-          avatar_url: user.avatar_url
-        }
-      })
+      |> Session.create(user)
+      |> json(%{user: user})
     else
       {:error, :unsupported_provider} ->
         conn
-        |> put_status(:bad_request)
+        |> put_status(:unprocessable_entity)
         |> json(%{error: "Unsupported provider", supported: Manager.supported_providers()})
 
       {:error, reason} ->
         conn
-        |> put_status(:bad_request)
+        |> put_status(:unprocessable_entity)
         |> json(%{error: "Auth failed", reason: inspect(reason)})
     end
   end
@@ -102,7 +91,7 @@ defmodule AppWeb.OAuthController do
     else
       {:error, :unsupported_provider} ->
         conn
-        |> put_status(:bad_request)
+        |> put_status(:unprocessable_entity)
         |> json(%{error: "Unsupported provider", supported: Manager.supported_providers()})
 
       {:error, reason} ->
