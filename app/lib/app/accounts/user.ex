@@ -55,7 +55,7 @@ defmodule App.Accounts.User do
 
   defp hash_password(changeset), do: changeset
 
-  @spec verify_password(%User{}, String.t()) :: boolean()
+  @spec verify_password(User.t(), String.t()) :: boolean()
   def verify_password(user, password) do
     Bcrypt.verify_pass(password, user.password_hash)
   end

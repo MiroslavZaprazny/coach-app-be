@@ -12,14 +12,14 @@ defmodule App.Accounts do
           avatar_url: String.t()
         }
 
-  @spec create_oauth_user(oauth_attrs()) :: {:ok, %User{}} | {:error, Ecto.Changeset.t()}
+  @spec create_oauth_user(oauth_attrs()) :: {:ok, User.t()} | {:error, Ecto.Changeset.t()}
   defp create_oauth_user(attrs) do
     %User{}
     |> User.oauth_changeset(Map.put(attrs, :registration_status, :incomplete))
     |> Repo.insert()
   end
 
-  @spec find_or_create_oauth_user(oauth_attrs()) :: {:ok, %User{}} | {:error, Ecto.Changeset.t()}
+  @spec find_or_create_oauth_user(oauth_attrs()) :: {:ok, User.t()} | {:error, Ecto.Changeset.t()}
   def find_or_create_oauth_user(attrs) do
     case Repo.get_by(User, email: Map.get(attrs, :email)) do
       nil ->
@@ -41,7 +41,7 @@ defmodule App.Accounts do
     |> Repo.insert()
   end
 
-  @spec get_by_email(String.t()) :: nil | App.Accounts.User.t()
+  @spec get_by_email(String.t()) :: nil | User.t()
   def get_by_email(email) do
     Repo.get_by(User, email: email)
   end
