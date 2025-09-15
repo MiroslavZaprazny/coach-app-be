@@ -5,18 +5,23 @@ defmodule App.OAuth.Manager do
     "google" => Providers.Google
   }
 
+  @spec supported_providers() :: [String.t()]
   def supported_providers, do: Map.keys(@providers)
 
+  @spec get_provider(String.t()) ::
+          {:ok, App.OAuth.Provider} | {:error, :unsupported_provider}
   def get_provider(provider_name) when is_map_key(@providers, provider_name) do
     {:ok, @providers[provider_name]}
   end
 
   def get_provider(_), do: {:error, :unsupported_provider}
 
+  @spec generate_state_token() :: {:ok, String.t()}
   def generate_state_token do
     {:ok, :crypto.strong_rand_bytes(32) |> Base.url_encode64(padding: false)}
   end
 
+  @spec get_auth_url(App.OAuth.Provider, String.t()) :: {:ok, String.t()}
   def get_auth_url(provider, state) do
     {:ok, client} = provider.get_client()
     auth_url = provider.authorize_url(client, state: state)
@@ -25,6 +30,9 @@ defmodule App.OAuth.Manager do
   end
 
   # Access token is saved to the OAuth2.Client instance
+  @spec fetch_access_token(OAuth2.Client.t(), String.t()) ::
+          {:ok, OAuth2.Client.t()}
+          | {:error, OAuth2.Error.t() | String.t() | OAuth2.Response.t()}
   def fetch_access_token(client, code) do
     case OAuth2.Client.get_token(client, code: code) do
       {:ok, %OAuth2.Client{} = updated_client} ->
