@@ -13,6 +13,7 @@ defmodule App.Application do
       AppWeb.Telemetry,
       App.Repo,
       {DNSCluster, query: Application.get_env(:app, :dns_cluster_query) || :ignore},
+      {Oban, Application.fetch_env!(:app, Oban)},
       {Phoenix.PubSub, name: App.PubSub},
       {Redix,
        host: redis_config[:host], port: String.to_integer(redis_config[:port]), name: :redix},

@@ -56,7 +56,9 @@ defmodule App.MixProject do
       {:oauth2, "~> 2.0"},
       {:redix, "~> 1.5.2"},
       {:bcrypt_elixir, "~> 3.3"},
-      {:dialyxir, "~> 1.4"}
+      {:dialyxir, "~> 1.4"},
+      {:oban, "~> 2.19"},
+      {:igniter, "~> 0.5", only: [:dev]}
     ]
   end
 

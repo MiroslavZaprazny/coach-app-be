@@ -3,7 +3,7 @@ defmodule App.Session do
 
   @session_ttl 2_592_000
 
-  @spec create(Plug.Conn.t(), App.Accounts.User.t()) ::
+  @spec create(Plug.Conn.t(), App.Models.User.t()) ::
           {:ok, Plug.Conn.t()}
           | {:error, atom() | Redix.Error.t() | Redix.ConnectionError.t()}
 
@@ -24,7 +24,7 @@ defmodule App.Session do
     end
   end
 
-  @spec get(String.t()) :: {:ok, App.Accounts.User.t()} | {:error, :not_found}
+  @spec get(String.t()) :: {:ok, App.Models.User.t()} | {:error, :not_found}
   def get(session_id) do
     case Cache.get(session_id) do
       {:ok, nil} ->

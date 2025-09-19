@@ -1,4 +1,4 @@
-defmodule App.Accounts.User do
+defmodule App.Models.User do
   use Ecto.Schema
   import Ecto.Changeset
   alias Ecto.Enum

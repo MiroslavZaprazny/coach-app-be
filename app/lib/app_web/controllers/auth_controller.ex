@@ -4,7 +4,7 @@ defmodule AppWeb.AuthController do
   alias App.{Accounts, Session}
   alias AppWeb.Schemas.Auth.{RegisterRequestBodySchema, LoginRequestBodySchema}
   alias AppWeb.Schemas.User.{UserResponseSchema, UserSessionNotFound}
-  alias App.Accounts.User
+  alias App.Models.User
 
   tags(["Auth"])
 

@@ -1,0 +1,33 @@
+<h1 style="color: #333; margin-bottom: 24px;">
+  Welcome to <%= assigns[:company_name] || "MyApp" %>, <%= @user.first_name || @user.email %>! 🎉
+</h1>
+
+<p style="font-size: 18px; margin-bottom: 24px;">
+  We're thrilled to have you on board. Your account has been successfully created and you're ready to get started.
+</p>
+
+<div style="background-color: #f8f9fa; padding: 24px; border-radius: 8px; margin: 24px 0;">
+  <h3 style="margin-top: 0; color: #495057;">Here's what you can do next:</h3>
+  <ul style="margin-bottom: 0; padding-left: 20px;">
+    <li style="margin-bottom: 8px;">Complete your profile setup</li>
+    <li style="margin-bottom: 8px;">Explore our features and tools</li>
+    <li style="margin-bottom: 8px;">Connect with other users</li>
+    <li>Check out our getting started guide</li>
+  </ul>
+</div>
+
+<div style="text-align: center; margin: 32px 0;">
+  <a href={assigns[:dashboard_url] || "#"} class="btn">
+    Get Started Now
+  </a>
+</div>
+
+<p>
+  If you have any questions or need help getting started, don't hesitate to reach out to our support team. 
+  We're here to help you make the most of your <%= assigns[:company_name] || "MyApp" %> experience.
+</p>
+
+<p style="margin-bottom: 0;">
+  Best regards,<br>
+  <strong>The <%= assigns[:company_name] || "MyApp" %> Team</strong>
+</p>
