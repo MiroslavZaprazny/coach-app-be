@@ -2,7 +2,7 @@ defmodule App.Accounts do
   import Ecto.Query, warn: false
   alias App.Repo
 
-  alias App.Accounts.User
+  alias App.Models.User
 
   @type oauth_attrs :: %{
           name: String.t(),
@@ -44,5 +44,10 @@ defmodule App.Accounts do
   @spec get_by_email(String.t()) :: nil | User.t()
   def get_by_email(email) do
     Repo.get_by(User, email: email)
+  end
+
+  @spec get(integer()) :: nil | User.t()
+  def get(id) do
+    Repo.get(User, id)
   end
 end

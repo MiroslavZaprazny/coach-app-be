@@ -4,7 +4,7 @@ defmodule App.AccountsTest do
   alias App.Accounts
 
   describe "users" do
-    alias App.Accounts.User
+    alias App.Models.User
 
     test "register user" do
       data = %{
